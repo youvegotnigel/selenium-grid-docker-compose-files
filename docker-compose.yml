@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+  chrome:
+    image: selenium/node-chrome:${CHROME_VERSION}
+    platform: linux/amd64
+    shm_size: ${CHROME_SHM_SIZE}
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=${CHROME_NODE_MAX_INSTANCES}
+      - SE_NODE_MAX_SESSIONS=${CHROME_NODE_MAX_SESSIONS}
+      - SE_VNC_NO_PASSWORD=1
+      - SE_OPTS=--enable-managed-downloads true
+      - SE_SCREEN_WIDTH=${SE_SCREEN_WIDTH}
+      - SE_SCREEN_HEIGHT=${SE_SCREEN_HEIGHT}
+    volumes:
+      - ./downloads:/home/seluser/Downloads
+    ports:
+      - '${CHROME_PORT}:7900'
+
+
+  edge:
+    image: selenium/node-edge:${EDGE_VERSION}
+    platform: linux/amd64
+    shm_size: ${EDGE_SHM_SIZE}
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=${EDGE_NODE_MAX_INSTANCES}
+      - SE_NODE_MAX_SESSIONS=${EDGE_NODE_MAX_SESSIONS}
+      - SE_VNC_NO_PASSWORD=1
+      - SE_OPTS=--enable-managed-downloads true
+      - SE_SCREEN_WIDTH=${SE_SCREEN_WIDTH}
+      - SE_SCREEN_HEIGHT=${SE_SCREEN_HEIGHT}
+    volumes:
+      - ./downloads:/home/seluser/Downloads
+    ports:
+      - '${EDGE_PORT}:7900'
+
+
+  firefox:
+    image: selenium/node-firefox:${FIREFOX_VERSION}
+    platform: linux/amd64
+    shm_size: ${FIREFOX_SHM_SIZE}
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=${FIREFOX_NODE_MAX_INSTANCES}
+      - SE_NODE_MAX_SESSIONS=${FIREFOX_NODE_MAX_SESSIONS}
+      - SE_VNC_NO_PASSWORD=1
+      - SE_OPTS=--enable-managed-downloads true
+      - SE_SCREEN_WIDTH=${SE_SCREEN_WIDTH}
+      - SE_SCREEN_HEIGHT=${SE_SCREEN_HEIGHT}
+    volumes:
+      - ./downloads:/home/seluser/Downloads
+    ports:
+      - '${FIREFOX_PORT}:7900'
+    
+
+  selenium-hub:
+    image: selenium/hub:${HUB_VERSION}
+    platform: linux/amd64
+    container_name: selenium-hub
+    ports:
+      - '4442:4442'
+      - '4443:4443'
+      - '4444:4444'
